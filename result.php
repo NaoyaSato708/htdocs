@@ -15,7 +15,7 @@ $pdo = new PDO(
 );
 ?>
 
-<h3>購入履歴(最新10件表示）</h3>
+<h3>購入履歴</h3>
 <?php
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
@@ -28,7 +28,7 @@ client_info
 VALUES
 ('$kokyaku','$syohin','$nedan')");
 
-echo 'New!:';
+echo '最新のデータ：';
 
 $n = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
 while ($i = $n -> fetch()) {
@@ -36,10 +36,10 @@ print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段
 }
 else 
 {
-    echo 'エラー！:テキストボックスに値が入力されていません';
+    echo '<span style="color:#FF0000;">エラー！:テキストボックスに値が入力されていません</span>';
     echo '<br/>';
     echo '<br/>';
-    echo 'New!:';
+    echo '最新のデータ：';
     $pdo = new PDO(
         "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
     );
