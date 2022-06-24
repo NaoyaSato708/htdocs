@@ -16,11 +16,15 @@ $pdo = new PDO(
 ?>
 
 <h3>購入履歴(最大10件表示)</h3>
+
 <?php
+
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
     "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
 );
+//リロードするとデータが再録されてしまうバグを、リダイレクトで直したい
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $pdo -> query("INSERT INTO
 client_info
@@ -28,11 +32,16 @@ client_info
 VALUES
 ('$kokyaku','$syohin','$nedan')");
 
+header('Location: '.$_SERVER['SCRIPT_NAME']);
+exit;
+}
+
 echo '最新のデータ：';
 
 $n = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
 while ($i = $n -> fetch()) {
 print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
+
 }
 else 
 {
