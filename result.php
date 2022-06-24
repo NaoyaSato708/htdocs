@@ -15,7 +15,7 @@ $pdo = new PDO(
 );
 ?>
 
-<h3>購入履歴</h3>
+<h3>購入履歴(最大10件表示)</h3>
 <?php
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
