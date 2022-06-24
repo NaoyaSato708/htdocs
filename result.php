@@ -2,9 +2,7 @@
 <meta charset="UTF-8">
 <title>結果画面</title>
 <h1>購入結果</h1>
-<section>
-    <button onclick="location.href='purchase.php'">戻る</button>
-</section>
+
 
 
 <?php
@@ -17,67 +15,55 @@ $pdo = new PDO(
 );
 ?>
 
-<h3>購入履歴</h3>
+<h3>購入履歴(最新10件表示）</h3>
 <?php
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
     "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
 );
-/*
-if ($pdo) {
-    echo "DB接続OK<br>";
-} else {
-    echo "DB接続NG<br>";
-}
-*/
+
 $pdo -> query("INSERT INTO
 client_info
 (client_name,product_name,price)
 VALUES
 ('$kokyaku','$syohin','$nedan')");
-/*
-if ($pdo) {
-    echo "登録成功<br>";
-} else {
-    echo "登録失敗<br>";
-}
-*/
-?>
 
-<?php
-$n = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC");
+echo 'New!:';
+
+$n = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
 while ($i = $n -> fetch()) {
 print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
 }
 else 
 {
-    echo 'エラー！';
+    echo 'エラー！:テキストボックスに値が入力されていません';
     echo '<br/>';
+    echo '<br/>';
+    echo 'New!:';
     $pdo = new PDO(
         "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
     );
-    /*
-    if ($pdo) {
-        echo "DB接続OK<br>";
-    } else {
-        echo "DB接続NG<br>";
-    }
-    */
-    $n = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC");
+    $n = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
     while ($i = $n -> fetch()) {
     print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
 }
 ?>
 
-<?php//顧客毎の購入履歴を求める?>
-<h3>顧客別購入商品一覧</h3>
+<section>
+    <button onclick="location.href='purchase.php'">戻る</button>
+</section>
+
+<h3>顧客毎の合計購入金額</h3>
 <?php
 
 $custmerName = $pdo -> query("SELECT client_name, SUM(price) as sum_price FROM client_info GROUP BY client_name");
 foreach ($custmerName as $row) {
+    echo '顧客名：';
     echo $row['client_name'];
     echo '<br>';
+    echo '合計金額：';
     echo $row['sum_price'];
+    echo '円';
     echo '<br>';
 }
 /*
