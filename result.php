@@ -29,8 +29,10 @@ unset($_SESSION["token"]);
 
 // POSTされたトークンとセッション変数のトークンの比較
 if($token != "" && $token == $session_token) {
-  // 登録画面送信データの登録を行う
+// 登録画面送信データの登録を行う
 
+
+//変数名を変える。
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
     "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
@@ -48,19 +50,17 @@ VALUES
     echo '<br/>';
   }
 
-echo '最新のデータ：';
+echo '最終履歴：';
 
 $sql = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
 while ($i = $sql -> fetch()) {
 print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
 
-}
-else 
-{
+} else {
     echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
     echo '<br/>';
     echo '<br/>';
-    echo '最新のデータ：';
+    echo '最終履歴：';
     $pdo = new PDO(
         "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
     );
