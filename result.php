@@ -3,8 +3,6 @@
 <title>結果画面</title>
 <h1>購入結果</h1>
 
-
-
 <?php
 $kokyaku = $_POST["a"];
 $syohin = $_POST["b"];
@@ -18,13 +16,25 @@ $pdo = new PDO(
 <h3>購入履歴(最大10件表示)</h3>
 
 <?php
+session_start();
+
+// POSTされたトークンを取得
+$token = isset($_POST["token"]) ? $_POST["token"] : "";
+
+// セッション変数のトークンを取得
+$session_token = isset($_SESSION["token"]) ? $_SESSION["token"] : "";
+
+// セッション変数のトークンを削除
+unset($_SESSION["token"]);
+
+// POSTされたトークンとセッション変数のトークンの比較
+if($token != "" && $token == $session_token) {
+  // 登録画面送信データの登録を行う
 
 if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
 $pdo = new PDO(
     "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
 );
-//リロードするとデータが再録されてしまうバグを、リダイレクトで直したい
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $pdo -> query("INSERT INTO
 client_info
@@ -32,30 +42,33 @@ client_info
 VALUES
 ('$kokyaku','$syohin','$nedan')");
 
-header('Location: '.$_SERVER['SCRIPT_NAME']);
-exit;
-}
+} else {
+    echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
+    echo '<br/>';
+    echo '<br/>';
+  }
 
 echo '最新のデータ：';
 
-$n = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
-while ($i = $n -> fetch()) {
+$sql = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
+while ($i = $sql -> fetch()) {
 print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
 
 }
 else 
 {
-    echo '<span style="color:#FF0000;">エラー！:テキストボックスに値が入力されていません</span>';
+    echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
     echo '<br/>';
     echo '<br/>';
     echo '最新のデータ：';
     $pdo = new PDO(
         "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
     );
-    $n = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
-    while ($i = $n -> fetch()) {
+    $sql = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
+    while ($i = $sql -> fetch()) {
     print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
 }
+
 ?>
 
 <section>
