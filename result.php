@@ -4,12 +4,15 @@
 <h1>購入結果</h1>
 
 <?php
-$kokyaku = $_POST["a"];
-$syohin = $_POST["b"];
-$nedan = $_POST["c"];
+$custmer = $_POST["custmerName"];
+$products = $_POST["productsName"];
+$Price = $_POST["Price"];
 
 $pdo = new PDO(
-    "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
+    "mysql:dbname=hello_world;host=localhost",
+    "root",
+    "",
+    array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
 );
 ?>
 
@@ -28,45 +31,51 @@ $session_token = isset($_SESSION["token"]) ? $_SESSION["token"] : "";
 unset($_SESSION["token"]);
 
 // POSTされたトークンとセッション変数のトークンの比較
-if($token != "" && $token == $session_token) {
-// 登録画面送信データの登録を行う
+if ($token != "" && $token == $session_token) {
+    // 登録画面送信データの登録を行う
 
 
-//変数名を変える。
-if(!empty($_POST["a"]) && !empty($_POST["b"]) && !empty($_POST["c"])) {
-$pdo = new PDO(
-    "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
-);
+    //変数名を変える。
+    if (!empty($_POST["custmerName"]) && !empty($_POST["productsName"]) && !empty($_POST["Price"])) {
+        $pdo = new PDO(
+            "mysql:dbname=hello_world;host=localhost",
+            "root",
+            "",
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
+        );
 
-$pdo -> query("INSERT INTO
+        $pdo->query("INSERT INTO
 client_info
 (client_name,product_name,price)
 VALUES
-('$kokyaku','$syohin','$nedan')");
+('$custmer','$products','$Price')");
+    } else {
+        echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
+        echo '<br/>';
+        echo '<br/>';
+    }
 
+    echo '最終入力履歴：';
+
+    $sql = $pdo->query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
+    while ($list = $sql->fetch()) {
+        print "顧客名：{$list['client_name']}  商品名：{$list['product_name']}  値段：{$list['price']}円<br><hr>";
+    }
 } else {
     echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
     echo '<br/>';
     echo '<br/>';
-  }
-
-echo '最終履歴：';
-
-$sql = $pdo -> query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
-while ($i = $sql -> fetch()) {
-print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
-
-} else {
-    echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
-    echo '<br/>';
-    echo '<br/>';
-    echo '最終履歴：';
+    echo '最終入力履歴：';
     $pdo = new PDO(
-        "mysql:dbname=hello_world;host=localhost","root","",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
+        "mysql:dbname=hello_world;host=localhost",
+        "root",
+        "",
+        array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
     );
-    $sql = $pdo -> query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
-    while ($i = $sql -> fetch()) {
-    print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段：{$i['price']}円<br><hr>";}
+    $sql = $pdo->query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
+    while ($list = $sql->fetch()) {
+        print "顧客名：{$list['client_name']}  商品名：{$list['product_name']}  値段：{$list['price']}円<br><hr>";
+    }
 }
 
 ?>
@@ -78,7 +87,7 @@ print "顧客名：{$i['client_name']}  商品名：{$i['product_name']}  値段
 <h3>顧客毎の合計購入金額</h3>
 <?php
 
-$custmerName = $pdo -> query("SELECT client_name, SUM(price) as sum_price FROM client_info GROUP BY client_name");
+$custmerName = $pdo->query("SELECT client_name, SUM(price) as sum_price FROM client_info GROUP BY client_name");
 foreach ($custmerName as $row) {
     echo '顧客名：';
     echo $row['client_name'];
