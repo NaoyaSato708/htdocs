@@ -6,7 +6,7 @@
 <?php
 $custmer = $_POST["custmerName"];
 $products = $_POST["productsName"];
-$Price = $_POST["Price"];
+$value = $_POST["Price"];
 
 $pdo = new PDO(
     "mysql:dbname=hello_world;host=localhost",
@@ -44,11 +44,12 @@ if ($token != "" && $token == $session_token) {
             array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
         );
 
+
         $pdo->query("INSERT INTO
 client_info
 (client_name,product_name,price)
 VALUES
-('$custmer','$products','$Price')");
+('$custmer','$products','$value')");
     } else {
         echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
         echo '<br/>';
