@@ -16,7 +16,7 @@ $pdo = new PDO(
 );
 ?>
 
-<h3>購入履歴(最大10件表示)</h3>
+<h3>ただいま入力したデータ</h3>
 
 <?php
 session_start();
@@ -56,27 +56,15 @@ VALUES
         echo '<br/>';
     }
 
-    echo '最終入力履歴：';
-
-    $sql = $pdo->query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 10");
+    if (!empty($_POST["custmerName"]) && !empty($_POST["productsName"]) && !empty($_POST["Price"])) {
+    $sql = $pdo->query("SELECT * FROM client_info ORDER BY id  DESC LIMIT 1");
     while ($list = $sql->fetch()) {
-        print "顧客名：{$list['client_name']}  商品名：{$list['product_name']}  値段：{$list['price']}円<br><hr>";
-    }
+        print "顧客名：{$list['client_name']}  商品名：{$list['product_name']}  値段：{$list['price']}円<br><br>";
+    }}
 } else {
     echo '<span style="color:#FF0000;">エラー！:不正な登録処理です</span>';
     echo '<br/>';
     echo '<br/>';
-    echo '最終入力履歴：';
-    $pdo = new PDO(
-        "mysql:dbname=hello_world;host=localhost",
-        "root",
-        "",
-        array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET CHARACTER SET `utf8`")
-    );
-    $sql = $pdo->query("SELECT * FROM client_info ORDER BY id DESC LIMIT 10");
-    while ($list = $sql->fetch()) {
-        print "顧客名：{$list['client_name']}  商品名：{$list['product_name']}  値段：{$list['price']}円<br><hr>";
-    }
 }
 
 ?>
