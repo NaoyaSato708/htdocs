@@ -15,8 +15,8 @@ $_SESSION['token'] = $token;
 <section>
     <form action="result.php" method="post">
         <!-- pattern=～　空白と記号は受け付けない -->
-        顧客名: <input type="text" pattern="[ぁ-んァ-ヶｦ-ﾟ一-龠０-９a-zA-Z0-9\-]+" name="custmerName"><br>
-        商品名: <input type="text" pattern="[ぁ-んァ-ヶｦ-ﾟ一-龠０-９a-zA-Z0-9\-]+" name="productsName"><br>
+        顧客名: <input type="text" pattern="[ぁ-んァ-ヶｦ-ﾟ一-龠０-９a-zA-Z0-9\-]+" name="custmerName" maxlength="60"><br>
+        商品名: <input type="text" pattern="[ぁ-んァ-ヶｦ-ﾟ一-龠０-９a-zA-Z0-9\-]+" name="productsName" maxlength="135"><br>
         値段: <input type="number" max="99999999" min="1" step="1" name="Price"><br>
         <input type="hidden" name="token" value="<?php echo $token; ?>">
         <button type="submit">登録</button>
